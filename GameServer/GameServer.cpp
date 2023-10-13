@@ -5,6 +5,11 @@
 #include "Session.h"
 #include "GameSession.h"
 #include "GameSessionManager.h"
+#include "BufferWriter.h"
+#include "ServerPacketHandler.h"
+#include <tchar.h>
+#include "Protocol.pb.h"
+
 
 int main()
 {
@@ -27,17 +32,30 @@ int main()
 			});
 	}
 
-	char sendData[1000] = "Hello World";
+	WCHAR sendData3[1000] = L"가"; // UTF16 = Unicode (한글/로마 2바이트)
 
 	while (true)
 	{
-		SendBufferRef sendBuffer = GSendBufferManager->Open(4096);
+		Protocol::S_TEST pkt;
+		pkt.set_id(1000);
+		pkt.set_hp(100);
+		pkt.set_attack(10);
 
-		BYTE* buffer = sendBuffer->Buffer();
-		((PacketHeader*)buffer)->size = (sizeof(sendData) + sizeof(PacketHeader));
-		((PacketHeader*)buffer)->id = 1; // 1 : Hello Msg
-		::memcpy(&buffer[4], sendData, sizeof(sendData));
-		sendBuffer->Close((sizeof(sendData) + sizeof(PacketHeader)));
+		{
+			Protocol::BuffData* data = pkt.add_buff();
+			data->set_buffid(100);
+			data->set_remaintime(1.2f);
+			data->add_victims(100);
+		}
+		{
+			Protocol::BuffData* data = pkt.add_buff();
+			data->set_buffid(200);
+			data->set_remaintime(2.5f);
+			data->add_victims(1000);
+			data->add_victims(2000);
+		}
+
+		SendBufferRef sendBuffer = ServerPacketHandler::MakeSendBuffer(pkt);
 
 		GSessionManager.Broadcast(sendBuffer);
 
