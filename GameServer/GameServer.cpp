@@ -9,10 +9,42 @@
 #include "ClientPacketHandler.h"
 #include <tchar.h>
 #include "Protocol.pb.h"
+#include "Job.h"
+#include "Room.h"
 
+void HealByValue(int64 target, int32 value)
+{
+	cout << target << " 한테 힐 " << value << " 만큼 줌" << endl;
+}
+
+class Knight
+{
+public:
+	void HealMe(int32 value)
+	{
+		cout << "Heal Me ! " << value << endl;
+	}
+};
 
 int main()
 {
+	auto tup = std::tuple<int32, int32>(1, 2);
+	auto val0 = std::get<0>(tup);
+	auto val1 = std::get<1>(tup);
+
+	auto s = gen_seq<3>();
+
+	// TEST JOB
+	{
+		FuncJob<void, int64, int32> job(HealByValue, 100, 10);
+		job.Execute();
+	}
+	{
+		Knight k1;
+		MemberJob job2(&k1, &Knight::HealMe, 10);
+		job2.Execute();
+	}
+
 	ClientPacketHandler::Init();
 
 	ServerServiceRef service = MakeShared<ServerService>(
@@ -32,6 +64,12 @@ int main()
 					service->GetIocpCore()->Dispatch();
 				}
 			});
+	}
+
+	while (true)
+	{
+		GRoom.FlushJob();
+		this_thread::sleep_for(1ms);
 	}
 
 	GThreadManager->Join();
