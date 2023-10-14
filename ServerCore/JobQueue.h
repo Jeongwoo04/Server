@@ -1,27 +1,48 @@
 #pragma once
+#include "Job.h"
+#include "LockQueue.h"
+#include "JobTimer.h"
 
-class JobQueue
+/****************
+*	JobQueue	*
+****************/
+
+class JobQueue : public enable_shared_from_this<JobQueue>
 {
 public:
-	void Push(JobRef job)
+	void DoAsync(CallbackType&& callback)
 	{
-		WRITE_LOCK;
-		_jobs.push(job);
+		Push(ObjectPool<Job>::MakeShared(std::move(callback)));
 	}
 
-	JobRef Pop()
+	template<typename T, typename Ret, typename... Args>
+	void DoAsync(Ret(T::* memFunc)(Args...), Args... args)
 	{
-		WRITE_LOCK;
-		if (_jobs.empty())
-			return nullptr;
-
-		JobRef ret = _jobs.front();
-		_jobs.pop();
-		return ret;
+		shared_ptr<T> owner = static_pointer_cast<T>(shared_from_this());
+		Push(ObjectPool<Job>::MakeShared(owner, memFunc, std::forward<Args>(args)...));
 	}
 
-private:
-	USE_LOCK;
-	queue<JobRef> _jobs;
+	void DoTimer(uint64 tickAfter, CallbackType&& callback)
+	{
+		JobRef job = ObjectPool<Job>::MakeShared(std::move(callback));
+		GJobTimer->Reserve(tickAfter, shared_from_this(), job);
+	}
 
+	template<typename T, typename Ret, typename... Args>
+	void DoTimer(uint64 tickAfter, Ret(T::* memFunc)(Args...), Args... args)
+	{
+		shared_ptr<T> owner = static_pointer_cast<T>(shared_from_this());
+		JobRef job = ObjectPool<Job>::MakeShared(owner, memFunc, std::forward<Args>(args)...);
+		GJobTimer->Reserve(tickAfter, shared_from_this(), job);
+	}
+
+	void ClearJobs() { _jobs.Clear(); }
+
+public:
+	void	Execute();
+	void	Push(JobRef job, bool pushOnly = false);
+
+protected:
+	LockQueue<JobRef>	_jobs;
+	Atomic<int32>		_jobCount = 0;
 };

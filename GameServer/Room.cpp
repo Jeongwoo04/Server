@@ -12,7 +12,7 @@ void Room::Enter(PlayerRef player)
 
 void Room::Leave(PlayerRef player)
 {
-	_players.equal_range(player->playerId);
+	_players.erase(player->playerId);
 }
 
 void Room::Broadcast(SendBufferRef sendBuffer)
@@ -20,17 +20,5 @@ void Room::Broadcast(SendBufferRef sendBuffer)
 	for (auto& p : _players)
 	{
 		p.second->ownerSession->Send(sendBuffer);
-	}
-}
-
-void Room::FlushJob()
-{
-	while (true)
-	{
-		JobRef job = _jobQueue.Pop();
-		if (job == nullptr)
-			break;
-
-		job->Execute();
 	}
 }
