@@ -8,7 +8,7 @@
       <UniqueIdentifier>{c5b5c98d-5710-400d-a9ff-d4c915e8c9a2}</UniqueIdentifier>
     </Filter>
     <Filter Include="Protocol">
-      <UniqueIdentifier>{81a10567-fc7e-42bd-a95a-43839b018d14}</UniqueIdentifier>
+      <UniqueIdentifier>{4c584712-a960-4f1e-8921-301c1ed915dd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -21,13 +21,13 @@
     <ClCompile Include="ServerPacketHandler.cpp">
       <Filter>Main</Filter>
     </ClCompile>
-    <ClCompile Include="Protocol.pb.cc">
+    <ClCompile Include="..\..\..\..\Downloads\ProcedureGenerator\DummyClient\Enum.pb.cc">
       <Filter>Protocol</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\Protobuf\bin\Enum.pb.cc">
+    <ClCompile Include="..\..\..\..\Downloads\ProcedureGenerator\DummyClient\Protocol.pb.cc">
       <Filter>Protocol</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\Protobuf\bin\Struct.pb.cc">
+    <ClCompile Include="..\..\..\..\Downloads\ProcedureGenerator\DummyClient\Struct.pb.cc">
       <Filter>Protocol</Filter>
     </ClCompile>
   </ItemGroup>
@@ -38,28 +38,14 @@
     <ClInclude Include="ServerPacketHandler.h">
       <Filter>Main</Filter>
     </ClInclude>
-    <ClInclude Include="Protocol.pb.h">
+    <ClInclude Include="..\..\..\..\Downloads\ProcedureGenerator\DummyClient\Enum.pb.h">
       <Filter>Protocol</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\Protobuf\bin\Enum.pb.h">
+    <ClInclude Include="..\..\..\..\Downloads\ProcedureGenerator\DummyClient\Protocol.pb.h">
       <Filter>Protocol</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\Protobuf\bin\Struct.pb.h">
+    <ClInclude Include="..\..\..\..\Downloads\ProcedureGenerator\DummyClient\Struct.pb.h">
       <Filter>Protocol</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\Common\Protobuf\bin\Enum.proto">
-      <Filter>Protocol</Filter>
-    </None>
-    <None Include="..\Common\Protobuf\bin\Protocol.proto">
-      <Filter>Protocol</Filter>
-    </None>
-    <None Include="..\Common\Protobuf\bin\Struct.proto">
-      <Filter>Protocol</Filter>
-    </None>
-    <None Include="..\Common\Protobuf\bin\GenPackets.bat">
-      <Filter>Protocol</Filter>
-    </None>
   </ItemGroup>
 </Project>

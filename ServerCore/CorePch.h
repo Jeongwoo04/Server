@@ -1,6 +1,6 @@
 #pragma once
 
-// Client나 GameServer에서 참조하기 원하는 것들
+// Client나 GameServer에서 참조할 것들
 
 #include "Types.h"
 #include "CoreGlobal.h"
@@ -24,3 +24,4 @@ using namespace std;
 #include "SendBuffer.h"
 #include "Session.h"
 #include "JobQueue.h"
+#include "ConsoleLog.h"
